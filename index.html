@@ -39,8 +39,17 @@
         <p>WhatsApp: +503 7468 1990 - San Salvador</p>
     </footer>
     <script src="JS/app.js"></script>
+    <script>
+  const menuBtn = document.getElementById("menuBtn");
+  const navMenu = document.getElementById("navMenu");
+
+  menuBtn.addEventListener("click", () => {
+    navMenu.classList.toggle("open");
+  });
+</script>
     <script type="module" src="JS/nav-auth.js"></script>
     <script type="module" src="JS/home.js"></script>
 </body>
 
 </html>
+

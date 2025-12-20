@@ -6,7 +6,7 @@ if (menuBtn && mainNav)
 {
     menuBtn.addEventListener("click", () => {
         mainNav.classList.toggle("open");
-    })
+    });
 }
 
 // Filtro de propiedades por zona
@@ -36,3 +36,4 @@ document.addEventListener("DOMContentLoaded", () => {
     nav.classList.toggle("open");
   });
 });
+

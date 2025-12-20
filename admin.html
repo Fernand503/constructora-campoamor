@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | CONSTRUCTORA CAMPOAMOR</title>
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="CSS/style.css" />
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    <style>
+        .admin-wrap { max-width: 900px; margin: 0 auto; padding: 22px; }
+        .hidden { display: none; }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px;}
+        @media (max-width: 768px){ .row{ grid-template-columns: 1fr; } }
+    .field { display:flex; flex-direction:column; gap:6px; }
+    input, textarea, select {
+        padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 10px; font-size: 14px;
+    }
+    textarea { min-height: 90px; resize: vertical; }
+    .top-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .danger { background: #ef4444; }
+    .list { display: grid; gap: 12px; margin-top: 12px; }
+    .mini { font-size: 13px; color: #6b7280;}
+    .badge{
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        border: 1px solid #e5e7eb;
+        background: #f9fafb;
+    }
+    .badge-ok { background: #ecfdf5; border-color: #bbf7d0; color: #065f46; }
+    .badge-off { background:#f3f4f6; border-color:#e5e7eb; color:#374151; }
+    .badge-star{ background:#fffbeb; border-color:#fde68a; color:#92400e; }
+
+.is-archived{
+    opacity:0.65;
+    filter: grayscale(0.2);
+}
+
+.btn.loading{
+    opacity:0.7;
+    pointer-events:none;
+}
+.modal{
+    position:fixed; inset:0;
+    background:rgba(0,0,0,.45);
+    display:flex; align-items:center; justify-content:center;
+    z-index:9999;
+}
+.modal.hidden{ display:none; }
+.modal-box{
+    width:min(420px, 92vw);
+    background:#fff;
+    border-radius:16px;
+    padding:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+.modal-actions{
+    margin-top:14px;
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+}
+    </style>
+</head>
+<body>
+    <header class="header">
+    <div class="logo">CONSTRUCTORA CAMPOAMOR</div>
+    <nav class="nav">
+        <a href="index.html">Inicio</a>
+        <a href="propiedades.html">Propiedades</a>
+        <a href="ubicaciones.html">Ubicaciones</a>
+        <a href="nosotros.html">Nosotros</a>
+        <a href="contacto.html">Contacto</a>
+        <a href="terminos.html">Términos</a>
+    </nav>
+    </header>
+
+    <main class="admin-wrap">
+
+    <!-- HEADER ADMIN -->
+    <div class="top-actions">
+    <div>
+        <h1>Panel Admin</h1>
+        <p class="mini">Solo para administrar propiedades (Agregar / Eliminar).</p>
+    </div>
+    <button id="logoutBtn" class="btn danger hidden">Cerrar sesión</button>
+    <button id="pdfBtn" class="btn" type="button">Descargar PDF</button>
+    </div>
+
+    <!-- LOGIN -->
+    <section id="loginBox" class="map-card">
+    <h2>Iniciar sesión</h2>
+    <p class="mini">Su correo de Administrador (Mamá)</p>
+
+    <form id="loginForm">
+        <div class="row" style="margin-top: 12px;">
+        <div class="field">
+            <label>Correo</label>
+            <input id="email" type="email" placeholder="correo@gmail.com" />
+        </div>
+
+        <div class="field">
+            <label>Contraseña</label>
+            <input id="password" type="password" placeholder="********" />
+        </div>
+    </div>
+
+        <button class="btn" style="margin-top: 12px;" type="submit">
+        Entrar
+    </button>
+
+        <p id="loginMsg" class="mini" style="margin-top: 10px;"></p>
+    </form>
+</section>
+
+    <!-- ADMIN -->
+    <section id="adminBox" class="hidden">
+
+    <!-- AGREGAR PROPIEDAD -->
+    <section class="map-card">
+        <h2>Agregar propiedad</h2>
+
+        <div class="row" style="margin-top: 12px;">
+        <div class="field">
+            <label>Título</label>
+            <input id="pTitulo" placeholder="Casa en Mejicanos" />
+        </div>
+
+        <div class="field">
+            <label>Zona</label>
+            <input id="pZona" placeholder="Mejicanos" />
+        </div>
+    </div>
+
+        <div class="row" style="margin-top: 12px;">
+        <div class="field">
+            <label>Precio (texto)</label>
+            <input id="pPrecio" placeholder="$175,000 USD" />
+        </div>
+
+        <div class="field">
+            <label>Imagen (URL o ruta)</label>
+            <input id="pImg" placeholder="img/casa1.jpg" />
+        </div>
+        </div>
+        <div class="field" style="margin-top: 12px;">
+            <label>
+                <input type="checkbox" id="pDestacada">
+                Marcar como destacada
+            </label>
+        </div>
+
+        <div class="field" style="margin-top: 12px;">
+        <label>Detalles</label>
+        <textarea id="pDetalles" placeholder="3 habitaciones • 2 baños • Cochera"></textarea>
+        </div>
+
+        <button id="addBtn" class="btn" style="margin-top: 12px;">
+        Guardar propiedad
+        </button>
+
+        <p id="saveMsg" class="mini" style="margin-top: 10px;"></p>
+    </section>
+
+    <!-- LISTADO -->
+    <section class="map-card">
+        <h2>Propiedades actuales</h2>
+        <div id="list" class="list"></div>
+    </section>
+
+    </section>
+</main>
+<div id="confirmModal" class="modal hidden">
+    <div class="modal-box">
+    <h3>Confirmación</h3>
+    <p id="confirmText" class="mini">¿Seguro?</p>
+    <div class="modal-actions">
+        <button id="confirmCancel" class="btn">Cancelar</button>
+        <button id="confirmOk" class="btn danger">Eliminar</button>
+    </div>
+    </div>
+</div>
+
+    <footer class="footer">
+        <p>© 2025 CONSTRUCTORA CAMPOAMOR</p>
+        <p>WhatsApp: +503 7468 1990 - San Salvador</p>
+    </footer>
+
+    <!-- Firebase + lógica admin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.min.js"></script>
+    <script type="module" src="JS/admin.js"></script>
+</body>
+</html>

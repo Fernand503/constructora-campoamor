@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propiedades | CAMPOAMOR S.A</title>
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">CONSTRUCTORA CAMPOAMOR</div>
+
+        <nav class="nav" id="mainNav">
+            <a href="admin.html" id="navAdmin" class="hidden">Admin</a>
+            <a href="index.html">Inicio</a>
+            <a href="propiedades.html">Propiedades</a>
+            <a href="ubicaciones.html">Ubicaciones</a>
+            <a href="nosotros.html">Nosotros</a>
+            <a href="contacto.html">Contacto</a>
+            <a href="terminos.html">Términos</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>Nuestras Casas</h1>
+        <p>Explora nuestras propiedades disponibles. Para más información. escribenos por WhatsApp.</p>
+
+        <section class="grid-propiedades" id="propGrid">
+            <article class="card" data-zona="Mejicanos">
+                <img src="img/casa1.jpg" alt="Casa en venta en Mejicanos">
+                <div class="card-body">
+                    <h3>$175,000 USD</h3>
+                    <p><strong>Zona:</strong> Mejicanos</p>
+                    <p>3 habitaciones * 2 baños * Cochera</p>
+
+                    <a class="btn" target="_blank" href="https://wa.me/50374681990?text=Hola%20CONSTRUCTORA,%20quiero%20info%20de%20la%20casa%20en%20Mejicanos%20de%20$175,000">
+                        Consultar por WhatsApp
+                    </a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+        <footer class="footer">
+        <p>© 2025 CONSTRUCTORA CAMPOAMOR</p>
+        <p>WhatsApp: +503 7468 1990 - San Salvador</p>
+    </footer>
+    <script src="JS/app.js"></script>
+    <script>
+    const menuBtn = document.getElementById("menuBtn");
+    const navMenu = document.getElementById("mainNav");
+
+    menuBtn.addEventListener("click", () => {
+    navMenu.classList.toggle("open");
+    });
+</script>
+    <script type="module" src="JS/propiedades.js"></script>
+    <script type="module" src="JS/nav-auth.js"></script>
+</body>
+</html>

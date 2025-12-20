@@ -23,4 +23,16 @@ filterBtns.forEach(btn => {
             card.style.display = show ? "" : "none";
         });
     });
+
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const menuBtn = document.getElementById("menuBtn");
+  const nav = document.getElementById("mainNav");
+
+  if (!menuBtn || !nav) return;
+
+  menuBtn.addEventListener("click", () => {
+    nav.classList.toggle("open");
+  });
 });

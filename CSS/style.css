@@ -250,6 +250,13 @@ main.container {
 
     .grid-propiedades{
     grid-template-columns: 1fr;
+
+    .menu-btn {
+    font-size: 26px;
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
 }
 }
 
@@ -296,4 +303,5 @@ main.container {
         opacity: 0;
         transform: translateY(-10px);
     }
+
 }

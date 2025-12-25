@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propiedades | CAMPOAMOR S.A</title>
+    <meta name="description" content="Explora casas y terrenos disponibles en El Salvador. Propiedades actualizadas con información clara y fotografías reales.">
+    <link rel="stylesheet" href="/CSS/style.css">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FVEXNTSWBE"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-FVEXNTSWBE');
+</script>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">CONSTRUCTORA CAMPOAMOR</div>
+
+        <nav class="nav" id="mainNav">
+            <a href="/admin.html" id="navAdmin" class="hidden">Admin</a>
+            <a href="/">Inicio</a>
+            <a href="/propiedades/">Propiedades</a>
+            <a href="/ubicaciones/">Ubicaciones</a>
+            <a href="/nosotros/">Nosotros</a>
+            <a href="/contacto/">Contacto</a>
+            <a href="/terminos/">Términos</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>Nuestras Casas</h1>
+        <p>Explora nuestras propiedades disponibles. Para más información. escribenos por WhatsApp.</p>
+
+        <section class="grid-propiedades" id="propGrid">
+            <article class="card" data-zona="Mejicanos">
+                <img src="img/casa1.jpg" alt="Casa en venta en Mejicanos">
+                <div class="card-body">
+                    <h3>$175,000 USD</h3>
+                    <p><strong>Zona:</strong> Mejicanos</p>
+                    <p>3 habitaciones * 2 baños * Cochera</p>
+
+                    <a class="btn" target="_blank" href="https://wa.me/50374681990?text=Hola%20CONSTRUCTORA,%20quiero%20info%20de%20la%20casa%20en%20Mejicanos%20de%20$175,000">
+                        Consultar por WhatsApp
+                    </a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+        <footer class="footer">
+        <p>© 2025 CONSTRUCTORA CAMPOAMOR</p>
+        <p>WhatsApp: +503 7468 1990 - San Salvador</p>
+    </footer>
+    <script src="/JS/app.js"></script>
+    <script>
+    const menuBtn = document.getElementById("menuBtn");
+    const navMenu = document.getElementById("mainNav");
+
+    menuBtn.addEventListener("click", () => {
+    navMenu.classList.toggle("open");
+    });
+</script>
+    <script type="module" src="/JS/propiedades.js"></script>
+    <script type="module" src="/JS/nav-auth.js"></script>
+</body>
+
+</html>

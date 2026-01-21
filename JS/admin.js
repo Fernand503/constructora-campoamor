@@ -1,4 +1,4 @@
-import { auth, db, storage } from "./firebase.js";
+import { auth, db, storage } from "./firebase.js?v=3";
 
 import {
     signInWithEmailAndPassword,

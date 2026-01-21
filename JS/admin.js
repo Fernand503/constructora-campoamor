@@ -16,22 +16,25 @@ import {
     query,
     orderBy,
     updateDoc,
-    getDocs,
-    ref,
-    uploadBytes,
-    getDownloadURL
+    getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
 
 // DOM
 const loginBox  = document.getElementById("loginBox");
 const loginForm = document.getElementById("loginForm");
 const adminBox  = document.getElementById("adminBox");
 const logoutBtn = document.getElementById("logoutBtn");
+const pdfBtn = document.getElementById("pdfBtn");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const loginMsg = document.getElementById("loginMsg");
 const list = document.getElementById("list");
-
 const pDestacada = document.getElementById("pDestacada");
 const pTitulo = document.getElementById("pTitulo");
 const pZona = document.getElementById("pZona");
@@ -340,8 +343,6 @@ function confirmUI(message) {
     cancel.onclick = () => { cleanup(); resolve(false); };
     });
 }
-
-const pdfBtn = document.getElementById("pdfBtn");
 
 function formatDateYYYYMMDD(d = new Date()) {
     const yyyy = d.getFullYear();

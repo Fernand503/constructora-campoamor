@@ -1,3 +1,5 @@
+console.log("🔥 admin.js cargado");
+
 import { auth, db, storage } from "./firebase.js";
 
 import {

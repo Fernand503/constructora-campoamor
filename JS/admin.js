@@ -76,21 +76,29 @@ async function uploadPropertyImageToCloudinary(file) {
 }
 
 uploadImgBtn?.addEventListener("click", async () => {
-  uploadMsg.textContent = "Subiendo...";
+  const old = uploadImgBtn.textContent;
+
+  uploadImgBtn.classList.add("loading");
+  uploadImgBtn.textContent = "Subiendo..."; // ✅ texto mientras sube
+  uploadMsg.textContent = "";
 
   try {
-    const file = pImgFile.files[0];
+    const file = pImgFile?.files?.[0];
     if (!file) throw new Error("No file selected");
 
     const url = await uploadPropertyImageToCloudinary(file);
 
-    pImg.value = url; // 🔥 aquí se guarda la URL final
+    pImg.value = url;
     uploadMsg.textContent = "✅ Imagen subida y lista.";
   } catch (err) {
     console.error(err);
     uploadMsg.textContent = "❌ Error al subir imagen.";
+  } finally {
+    uploadImgBtn.classList.remove("loading");
+    uploadImgBtn.textContent = "Subir imagen"; // ✅ vuelve a normal (NO se queda “Subiendo…”)
   }
 });
+
 
 
 // LOGIN

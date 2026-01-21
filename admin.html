@@ -144,10 +144,13 @@
 
         <div class="field">
     <label>Imagen (subir desde el panel)</label>
-    <input id="pImgFile" type="file" accept="image/*" />
-    <button id="uploadImgBtn" class="btn" type="button" style="margin-top:8px;">
-      Subir imagen
+    <input type="file" id="pImgFile" accept="image/*">
+    <button type="button" id="uploadImgBtn" class="btn success">
+        Subir imagen
     </button>
+    <p id="uploadMsg" class="mini"></p>
+
+    <input type="hidden" id="pImg">
 
     <!-- Aquí se guardará la URL final automáticamente -->
     <input id="pImg" type="hidden" />

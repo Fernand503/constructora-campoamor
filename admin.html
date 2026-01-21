@@ -143,10 +143,17 @@
         </div>
 
         <div class="field">
-            <label>Imagen (URL o ruta)</label>
-            <input id="pImg" placeholder="img/casa1.jpg" />
-        </div>
-        </div>
+    <label>Imagen (subir desde el panel)</label>
+    <input id="pImgFile" type="file" accept="image/*" />
+    <button id="uploadImgBtn" class="btn" type="button" style="margin-top:8px;">
+      Subir imagen
+    </button>
+
+    <!-- Aquí se guardará la URL final automáticamente -->
+    <input id="pImg" type="hidden" />
+    <p id="uploadMsg" class="mini" style="margin-top: 8px;"></p>
+  </div>
+</div>
         <div class="field" style="margin-top: 12px;">
             <label>
                 <input type="checkbox" id="pDestacada">

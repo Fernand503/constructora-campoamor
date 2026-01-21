@@ -1,4 +1,4 @@
-import { auth, db } from "./firebase.js";
+import { auth, db, storage } from "./firebase.js";
 
 import {
     signInWithEmailAndPassword,
@@ -16,7 +16,10 @@ import {
     query,
     orderBy,
     updateDoc,
-    getDocs
+    getDocs,
+    ref,
+    uploadBytes,
+    getDownloadURL
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
 // DOM
@@ -37,6 +40,9 @@ const pImg = document.getElementById("pImg");
 const pDetalles =document.getElementById("pDetalles");
 const addBtn =document.getElementById("addBtn");
 const saveMsg =document.getElementById("saveMsg");
+const pImgFile = document.getElementById("pImgFile");
+const uploadImgBtn = document.getElementById("uploadImgBtn");
+const uploadMsg = document.getElementById("uploadMsg");
 
 // LOGIN
 loginForm.addEventListener("submit", async (e) => {
@@ -113,20 +119,57 @@ logoutBtn.addEventListener("click", async () => {
     await signOut(auth);
 });
 
+async function uploadPropertyImage(file) {
+  // nombre único pa no pisarse
+  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  const safeName = `propiedades/${Date.now()}_${Math.random().toString(16).slice(2)}.${ext}`;
+
+  const storageRef = ref(storage, safeName);
+
+  // sube el archivo
+  await uploadBytes(storageRef, file);
+
+  // devuelve URL pública
+  return await getDownloadURL(storageRef);
+}
+
+uploadImgBtn?.addEventListener("click", async () => {
+  uploadMsg.textContent = "";
+
+  const file = pImgFile?.files?.[0];
+  if (!file) {
+    uploadMsg.textContent = "❌ Selecciona una imagen primero.";
+    return;
+  }
+
+  uploadImgBtn.classList.add("loading");
+  const old = uploadImgBtn.textContent;
+  uploadImgBtn.textContent = "Subiendo...";
+
+  try {
+    const url = await uploadPropertyImage(file);
+
+    // guardamos URL en el hidden input pImg
+    pImg.value = url;
+
+    uploadMsg.textContent = "✅ Imagen subida y lista.";
+  } catch (err) {
+    console.error(err);
+    uploadMsg.textContent = "❌ No se pudo subir. Revisa consola.";
+  } finally {
+    uploadImgBtn.classList.remove("loading");
+    uploadImgBtn.textContent = old;
+  }
+});
+
 addBtn.addEventListener("click", async () => {
     saveMsg.textContent = "";
 
-    // Validación simple
-    let imgValue = pImg.value.trim();
-
-    if (imgValue && !imgValue.startsWith("img/") && !imgValue.startsWith("http")) {
-        imgValue = "img/" + imgValue;
-    }
     const data = {
         titulo: pTitulo.value.trim(),
         zona: pZona.value.trim(),
         precioTexto: pPrecio.value.trim(),
-        img: imgValue,
+        img: pImg.value.trim(),
         detalles: pDetalles.value.trim(),
 
         // Esto sera un extra útil desde ya
@@ -141,6 +184,12 @@ addBtn.addEventListener("click", async () => {
         setTimeout(() => adminBox.classList.remove("shake"), 300);
         return;
     }
+
+    if (!pImg.value.trim()) {
+        saveMsg.textContent = "❌ Sube una imagen antes de guardar.";
+        return;
+    }
+
 
     // UI: loading
     addBtn.classList.add("loading");
@@ -158,6 +207,8 @@ addBtn.addEventListener("click", async () => {
         pImg.value = "";
         pDetalles.value = "";
         pDestacada.checked = false;
+        pImgFile.value = "";
+        uploadMsg.textContent = "";
     } catch (error) {
         console.error(error);
         saveMsg.textContent = "❌ Error al guardar. Revisa consola.";

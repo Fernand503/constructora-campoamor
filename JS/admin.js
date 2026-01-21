@@ -43,9 +43,55 @@ const pImg = document.getElementById("pImg");
 const pDetalles =document.getElementById("pDetalles");
 const addBtn =document.getElementById("addBtn");
 const saveMsg =document.getElementById("saveMsg");
+
+// ==== CLOUDINARY UPLOAD ====
+const CLOUD_NAME = "dzbtg9p9x";
+const UPLOAD_PRESET = "campoamor_upload";
+
+// input file (debes crearlo en el HTML)
 const pImgFile = document.getElementById("pImgFile");
 const uploadImgBtn = document.getElementById("uploadImgBtn");
 const uploadMsg = document.getElementById("uploadMsg");
+
+async function uploadPropertyImageToCloudinary(file) {
+  const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET);
+  formData.append("folder", "propiedades");
+
+  const res = await fetch(url, {
+    method: "POST",
+    body: formData
+  });
+
+  if (!res.ok) {
+    const txt = await res.text().catch(() => "");
+    throw new Error(`Cloudinary upload failed: ${res.status} ${txt}`);
+  }
+
+  const data = await res.json();
+  return data.secure_url;
+}
+
+uploadImgBtn?.addEventListener("click", async () => {
+  uploadMsg.textContent = "Subiendo...";
+
+  try {
+    const file = pImgFile.files[0];
+    if (!file) throw new Error("No file selected");
+
+    const url = await uploadPropertyImageToCloudinary(file);
+
+    pImg.value = url; // 🔥 aquí se guarda la URL final
+    uploadMsg.textContent = "✅ Imagen subida y lista.";
+  } catch (err) {
+    console.error(err);
+    uploadMsg.textContent = "❌ Error al subir imagen.";
+  }
+});
+
 
 // LOGIN
 loginForm.addEventListener("submit", async (e) => {

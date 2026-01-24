@@ -1,9 +1,10 @@
-import { auth, db, storage } from "./firebase.js?v=3";
+import { auth, db } from "./firebase.js?";
 
 import {
     signInWithEmailAndPassword,
     onAuthStateChanged,
-    signOut
+    signOut,
+    getAuth
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
 import {
@@ -18,13 +19,6 @@ import {
     updateDoc,
     getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
-
 // DOM
 const loginBox  = document.getElementById("loginBox");
 const loginForm = document.getElementById("loginForm");

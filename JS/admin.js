@@ -3,8 +3,7 @@ import { auth, db } from "./firebase.js?";
 import {
     signInWithEmailAndPassword,
     onAuthStateChanged,
-    signOut,
-    getAuth
+    signOut
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
 import {
@@ -139,9 +138,6 @@ loginForm.addEventListener("submit", async (e) => {
 
 // Mostrar/ocultar según sesión
 onAuthStateChanged(auth, (user) => {
-    onAuthStateChanged(auth, (user) => {
-  console.log("UID sesión:", user?.uid);
-});
 
         if (user) {
     loginBox.classList.add("hidden");
@@ -175,48 +171,6 @@ logoutBtn.addEventListener("click", async () => {
     await signOut(auth);
 });
 
-async function uploadPropertyImage(file) {
-  // nombre único pa no pisarse
-  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-  const safeName = `propiedades/${Date.now()}_${Math.random().toString(16).slice(2)}.${ext}`;
-
-  const storageRef = ref(storage, safeName);
-
-  // sube el archivo
-  await uploadBytes(storageRef, file);
-
-  // devuelve URL pública
-  return await getDownloadURL(storageRef);
-}
-
-uploadImgBtn?.addEventListener("click", async () => {
-  uploadMsg.textContent = "";
-
-  const file = pImgFile?.files?.[0];
-  if (!file) {
-    uploadMsg.textContent = "❌ Selecciona una imagen primero.";
-    return;
-  }
-
-  uploadImgBtn.classList.add("loading");
-  const old = uploadImgBtn.textContent;
-  uploadImgBtn.textContent = "Subiendo...";
-
-  try {
-    const url = await uploadPropertyImage(file);
-
-    // guardamos URL en el hidden input pImg
-    pImg.value = url;
-
-    uploadMsg.textContent = "✅ Imagen subida y lista.";
-  } catch (err) {
-    console.error(err);
-    uploadMsg.textContent = "❌ No se pudo subir. Revisa consola.";
-  } finally {
-    uploadImgBtn.classList.remove("loading");
-    uploadImgBtn.textContent = old;
-  }
-});
 
 addBtn.addEventListener("click", async () => {
     saveMsg.textContent = "";

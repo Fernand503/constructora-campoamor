@@ -7,7 +7,7 @@ const firebaseConfig = {
     apiKey: "AIzaSyD5SPFnTYGYnUZ_RDRYWNOrSd90uWt-VgI",
     authDomain: "campoamor-inmobiliaria.firebaseapp.com",
     projectId: "campoamor-inmobiliaria",
-    storageBucket: "campoamor-inmobiliaria.appspot.com",
+    storageBucket: "campoamor-inmobiliaria.firebasestorage.app",
     messagingSenderId: "203960160844",
     appId: "1:203960160844:web:a1835b3b9c1c4d66a7dae9"
 };

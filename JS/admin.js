@@ -19,6 +19,7 @@ import {
     updateDoc,
     getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
 // DOM
 const loginBox  = document.getElementById("loginBox");
 const loginForm = document.getElementById("loginForm");
@@ -138,6 +139,10 @@ loginForm.addEventListener("submit", async (e) => {
 
 // Mostrar/ocultar según sesión
 onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, (user) => {
+  console.log("UID sesión:", user?.uid);
+});
+
         if (user) {
     loginBox.classList.add("hidden");
     adminBox.classList.remove("hidden");

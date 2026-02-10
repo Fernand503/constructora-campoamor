@@ -1,0 +1,9 @@
+{
+    "name": "Geometria y Construcción",
+    "short_name": "G&C",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#0d6efd",
+    "icons": []
+}

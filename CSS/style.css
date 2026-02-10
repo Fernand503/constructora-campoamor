@@ -251,16 +251,56 @@ main.container {
     .grid-propiedades{
     grid-template-columns: 1fr;
 }
+
+.home-hero .text-uppercase.small.text-muted {
+    display: none;
+}
+
+.home-hero .d-flex-gap-2.flex-wrap.mt-3 {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.home-hero .d-flex-gap-2.flex-wrap.mt-3 .btn {
+    width: 100%;
+}
+
+.home-hero .hero-media img {
+    margin-top: 16px;
+    border-radius: 12px;
+}
+
+.project-card {
+    padding: 16px;
+}
+
+.project-card h3 {
+    font-size: 1.25rem;
+}
+
+.project-card .btn {
+    width: 100%;
+    margin-top: 12px;
+}
+
+section .btn-outline.primary {
+    width: 100%;
+}
+
+section .text-lg-end {
+    text-align: left !important;
+}
+
 }
 
 .hidden { display: none !important; }
 
 /* BOTÓN*/
-.btn {
+.card .btn {
     transition: .15s ease, box-shadow .15s ease, opacity .2s ease; 
 }
 
-.btn:hover {
+.card .btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 14px rgba(0, 0, 0, .15);
 }
@@ -297,3 +337,24 @@ main.container {
         transform: translateY(-10px);
     }
 }
+/* ==== HOME HERO (Bootstrap) ==== */
+.hero-media img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.home-hero {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+}
+
+.home-hero h1 {
+    letter-spacing: -0.5px;
+}
+
+/* Opcional: que se sienta más "premium" */
+header .lead {
+    max-width: 40ch;
+}
+

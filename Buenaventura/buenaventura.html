@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Residencial Buenaventura</title>
+    <link rel="stylesheet" href="/Buenaventura/style.css">
+    <link rel="stylesheet" href="/CSS/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <header class="header">
+        <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button>
+        <div class="logo">GEOMETRIA Y CONSTRUCCION S.A de CV</div>
+
+        <nav class="nav" id="mainNav">
+            <a href="admin.html" id="navAdmin" class="hidden">Admin</a>
+            <a href="index.html">Inicio</a>
+            <a href="propiedades/index.html">Propiedades</a>
+            <a href="ubicaciones/index.html">Ubicaciones</a>
+            <a href="nosotros/index.html">Nosotros</a>
+            <a href="contacto/index.html">Contacto</a>
+            <a href="terminos/index.html">Términos</a>
+        </nav>
+    </header>
+
+    <main class="bv-hero">
+        <div class="container py-5">
+            <div class="row align-items-center g-4">
+
+                <!-- Texto -->
+                 <div class="col-12 col-lg-6">
+                    <p class="bv-eyebrow"> Proyecto residencial</p>
+
+                    <h1 class="bv-title">Residencial Buenaventura</h1>
+
+                    <p class="bv-subtitle">
+                        Próximamente • Viviendas exclusivas de 2 niveles • Planos disponibles
+                    </p>
+
+                    <div class="d-flex gap-2 flex-wrap mt-4 bv-cta">
+                        <a class="btn btn-success btn-lg"
+                        href="https://wa.me/50374681990?text=Hola,%20quiero%20informaci%C3%B3n%20del%20proyecto%20Residencial%20Buenaventura."
+                        target="_blank"
+                        rel="noopener noreferrer">
+                            Solicitar información
+                        </a>
+
+                        <a class="btn btn-outline-primary btn-lg"
+                        href="#modelos">
+                            Ver Modelos
+                        </a>
+                    </div>
+
+                    <div class="bv-trust mt-4">
+                        <span>✅ Asesoría personalizada</span>
+                        <span>✅ Acompañamiento en el proceso</span>
+                        <span>✅ Ubicación estratégica</span>
+                    </div>
+                 </div>
+
+                 <!-- Imagen -->
+                  <div class="col-12 col-lg-6">
+                    <div class="bv-media">
+                        <img src="/img/hero2.jpeg" alt="Residencial Buenaventura"
+                        class="img-fluid"/>
+                    </div>
+                  </div>
+                
+            </div>
+        </div>
+    </main>
+
+    <!-- Ancla para el botón -->
+     <section id="modelos" class="container py-5">
+        <h2 class="section-title">Modelos de vivienda</h2>
+        <p class="section-subtitle">
+            Conoce las opciones disponibles del proyecto Residencial Buenaventura.
+        </p>
+
+        <div class="row g-4 mt-3">
+
+            <!-- Modelo A -->
+             <div class="col-12 col-md-6 col-lg-4">
+                <div class="model-card">
+                    <h3>Modelo A</h3>
+                    <p>2 niveles · 3 habitaciones · 2 baños</p>
+                    <a href="#" class="btn btn-outline-primary btn-sm">
+                        Ver plano
+                    </a>
+                </div>
+             </div>
+
+        </div>
+     </section>
+
+    <section class="container py-5" id="galeria">
+        <h2 class="section-title">Galeria</h2>
+
+        <div id="bvCarousel" class="carousel slide bv-carousel mt-3" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#bvCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#bvCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#bvCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="/img/plano1.jpeg" class="d-block w-100" alt="Plano 1 Buenaventura">
+                </div>
+                <div class="carousel-item">
+                    <img src="/img/plano3.jpeg" class="d-block w-100" alt="Plano 3 Buenaventura">
+                </div>
+                <div class="carousel-item">
+                    <img src="/img/plano4.jpeg" class="d-block w-100" alt="Plano 4 Buenaventura">
+                </div>
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#bvCarousel" data-bs-slide="prev" aria-label="Anterior">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#bvCarousel" data-bs-slide="next" aria-label="Siguiente">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+        </div>
+    </section>
+
+    <section class="container py-5">
+    <h2 class="section-title">Ubicación</h2>
+    <p class="section-subtitle">
+    Es una zona estratégica, con fácil acceso a vías principales, transporte, comercios y servicios, lo que la hace ideal tanto para vivir como para inversión.
+    </p>
+
+    <div class="ratio ratio-16x9 m-3 rounded-4 overflow-hidden">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3876.3781045841047!2d-89.126431!3d13.695535000000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTPCsDQxJzQzLjkiTiA4OcKwMDcnMzUuMiJX!5e0!3m2!1ses-419!2ssv!4v1770163521425!5m2!1ses-419!2ssv" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

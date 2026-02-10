@@ -1,13 +1,14 @@
 // Un Menú móvil: abrir/cerrar
-const menuBtn = document.getElementById("menuBtn");
-const mainNav = document.getElementById("mainNav");
+document.addEventListener("DOMContentLoaded", () => {
+    const menuBtn = document.getElementById("menuBtn");
+    const navMenu = document.getElementById("mainNav");
 
-if (menuBtn && mainNav)
-{
+    if (menuBtn && navMenu) {
     menuBtn.addEventListener("click", () => {
-        mainNav.classList.toggle("open");
+        navMenu.classList.toggle("open");
     });
-}
+    }
+});
 
 // Filtro de propiedades por zona
 const filterBtns = document.querySelectorAll(".filter-btn");

@@ -86,7 +86,9 @@
                 <div class="model-card">
                     <h3>Modelo A</h3>
                     <p>2 niveles · 3 habitaciones · 2 baños</p>
-                    <a href="#" class="btn btn-outline-primary btn-sm">
+                    <a class="btn btn-outline-primary btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalPlanoA">
                         Ver plano
                     </a>
                 </div>
@@ -94,6 +96,28 @@
 
         </div>
      </section>
+
+     <div class="modal fade" id="modalPlanoA" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Modelo A - Plano</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="ratio ratio-16x9">
+                        <iframe src="/PDF/Residencial Atenas._20260221_131309_0000.pdf"
+                            width="100%"
+                            height="600px">
+                        </iframe>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+     </div>
 
     <section class="container py-5" id="galeria">
         <h2 class="section-title">Galeria</h2>
@@ -137,6 +161,7 @@
         </iframe>
     </div>
     </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

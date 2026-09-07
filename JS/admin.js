@@ -1,425 +1,268 @@
-import { auth, db } from "./firebase.js?";
+import { auth, db } from "./firebase.js";
+import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+import { collection, addDoc, serverTimestamp, deleteDoc, doc, onSnapshot, query, orderBy, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+import { element, safeImageUrl } from "./property-card.js";
 
-import {
-    signInWithEmailAndPassword,
-    onAuthStateChanged,
-    signOut
-} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+const byId = (id) => document.getElementById(id);
+const loginBox = byId("loginBox");
+const loginForm = byId("loginForm");
+const adminBox = byId("adminBox");
+const logoutBtn = byId("logoutBtn");
+const pdfBtn = byId("pdfBtn");
+const loginMsg = byId("loginMsg");
+const list = byId("list");
+const listStatus = byId("listStatus");
+const pDestacada = byId("pDestacada");
+const pTitulo = byId("pTitulo");
+const pZona = byId("pZona");
+const pPrecio = byId("pPrecio");
+const pImg = byId("pImg");
+const pDetalles = byId("pDetalles");
+const addBtn = byId("addBtn");
+const saveMsg = byId("saveMsg");
+const pImgFile = byId("pImgFile");
+const uploadImgBtn = byId("uploadImgBtn");
+const uploadMsg = byId("uploadMsg");
+const propertiesQuery = query(collection(db, "propiedades"), orderBy("createdAt", "desc"));
+let unsubscribeProperties = null;
 
-import {
-    collection,
-    addDoc,
-    serverTimestamp,
-    deleteDoc,
-    doc,
-    onSnapshot,
-    query,
-    orderBy,
-    updateDoc,
-    getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-
-// DOM
-const loginBox  = document.getElementById("loginBox");
-const loginForm = document.getElementById("loginForm");
-const adminBox  = document.getElementById("adminBox");
-const logoutBtn = document.getElementById("logoutBtn");
-const pdfBtn = document.getElementById("pdfBtn");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const loginMsg = document.getElementById("loginMsg");
-const list = document.getElementById("list");
-const pDestacada = document.getElementById("pDestacada");
-const pTitulo = document.getElementById("pTitulo");
-const pZona = document.getElementById("pZona");
-const pPrecio = document.getElementById("pPrecio");
-const pImg = document.getElementById("pImg");
-const pDetalles =document.getElementById("pDetalles");
-const addBtn =document.getElementById("addBtn");
-const saveMsg =document.getElementById("saveMsg");
-
-// ==== CLOUDINARY UPLOAD ====
-const CLOUD_NAME = "dzbtg9p9x";
-const UPLOAD_PRESET = "campoamor_upload";
-
-// input file (debes crearlo en el HTML)
-const pImgFile = document.getElementById("pImgFile");
-const uploadImgBtn = document.getElementById("uploadImgBtn");
-const uploadMsg = document.getElementById("uploadMsg");
-
-async function uploadPropertyImageToCloudinary(file) {
-  const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
-
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", UPLOAD_PRESET);
-  formData.append("folder", "propiedades");
-
-  const res = await fetch(url, {
-    method: "POST",
-    body: formData
-  });
-
-  if (!res.ok) {
-    const txt = await res.text().catch(() => "");
-    throw new Error(`Cloudinary upload failed: ${res.status} ${txt}`);
-  }
-
-  const data = await res.json();
-  return data.secure_url;
+function busy(button, label) {
+  const previous = button.textContent;
+  button.disabled = true;
+  button.textContent = label;
+  return () => {
+    button.disabled = false;
+    button.textContent = previous;
+  };
 }
 
-uploadImgBtn?.addEventListener("click", async () => {
-  const old = uploadImgBtn.textContent;
-
-  uploadImgBtn.classList.add("loading");
-  uploadImgBtn.textContent = "Subiendo..."; // ✅ texto mientras sube
+function resetPropertyForm() {
+  for (const input of [pTitulo, pZona, pPrecio, pImg, pDetalles, pImgFile]) input.value = "";
+  pDestacada.checked = false;
   uploadMsg.textContent = "";
+}
 
+pImgFile.addEventListener("change", () => {
+  pImg.value = "";
+  uploadMsg.textContent = "";
+});
+
+uploadImgBtn.addEventListener("click", async () => {
+  const userId = auth.currentUser?.uid;
+  if (!userId) return;
+  const file = pImgFile.files[0];
+  if (!file) {
+    uploadMsg.textContent = "Selecciona una imagen primero.";
+    return;
+  }
+  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 10 * 1024 * 1024) {
+    uploadMsg.textContent = "Usa una imagen JPG, PNG o WebP de hasta 10 MB.";
+    return;
+  }
+  const restore = busy(uploadImgBtn, "Subiendo…");
+  pImgFile.disabled = true;
+  addBtn.disabled = true;
+  uploadMsg.textContent = "";
   try {
-    const file = pImgFile?.files?.[0];
-    if (!file) throw new Error("No file selected");
-
-    const url = await uploadPropertyImageToCloudinary(file);
-
-    pImg.value = url;
-    uploadMsg.textContent = "✅ Imagen subida y lista.";
-  } catch (err) {
-    console.error(err);
-    uploadMsg.textContent = "❌ Error al subir imagen.";
+    const form = new FormData();
+    form.append("file", file);
+    form.append("upload_preset", "campoamor_upload");
+    form.append("folder", "propiedades");
+    const response = await fetch("https://api.cloudinary.com/v1_1/dzbtg9p9x/image/upload", { method: "POST", body: form });
+    if (!response.ok) throw new Error(`Carga de imagen: HTTP ${response.status}`);
+    const data = await response.json();
+    if (!safeImageUrl(data.secure_url)) throw new Error("URL de imagen inválida");
+    if (auth.currentUser?.uid !== userId) return;
+    pImg.value = data.secure_url;
+    uploadMsg.textContent = "Imagen subida y lista para guardar.";
+  } catch (error) {
+    console.error(error);
+    uploadMsg.textContent = "No se pudo subir la imagen. Inténtalo de nuevo.";
   } finally {
-    uploadImgBtn.classList.remove("loading");
-    uploadImgBtn.textContent = "Subir imagen"; // ✅ vuelve a normal (NO se queda “Subiendo…”)
+    restore();
+    pImgFile.disabled = false;
+    addBtn.disabled = false;
   }
 });
 
-
-
-// LOGIN
-loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const btn = e.submitter;
-    loginMsg.textContent = "";
-
-  // animación click
-    btn.classList.add("press");
-    setTimeout(() => btn.classList.remove("press"), 120);
-
-  // estado cargando
-    btn.classList.add("loading");
-    btn.textContent = "Entrando...";
-
-    try {
-    await signInWithEmailAndPassword(
-        auth,
-        emailInput.value.trim(),
-        passwordInput.value
-    );
-
-    loginMsg.textContent = "✅ Sesión iniciada";
-
-    // animar salida del login
-    loginBox.classList.add("fade-out");
-
-    } catch (err) {
-    console.error(err);
-
-    loginMsg.textContent = "❌ Correo o contraseña incorrectos";
-    loginBox.classList.add("shake");
-    setTimeout(() => loginBox.classList.remove("shake"), 300);
-
-    } finally {
-    btn.classList.remove("loading");
-    btn.textContent = "Entrar";
-    }
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const button = loginForm.querySelector('[type="submit"]');
+  if (button.disabled) return;
+  const restore = busy(button, "Entrando…");
+  loginMsg.textContent = "";
+  try {
+    await signInWithEmailAndPassword(auth, byId("email").value.trim(), byId("password").value);
+    byId("password").value = "";
+  } catch (error) {
+    console.error(error);
+    loginMsg.textContent = "No se pudo iniciar sesión. Revisa tus datos y tu conexión.";
+  } finally {
+    restore();
+  }
 });
 
-
-// Mostrar/ocultar según sesión
+// Esta comprobación controla la interfaz. Los permisos reales deben validarse
+// mediante las reglas de Firestore, que se administran fuera de este repositorio.
 onAuthStateChanged(auth, (user) => {
-
-        if (user) {
-    loginBox.classList.add("hidden");
-    adminBox.classList.remove("hidden");
-    logoutBtn.classList.remove("hidden"); // 👈 mostrar
-    pdfBtn.classList.remove("hidden");
-
-    // animar y luego ocultar
-    loginBox.classList.add("fade-out");
-    setTimeout(() => {
-        loginBox.classList.add("hidden");
-        loginBox.classList.remove("fade-out");
-        adminBox.classList.remove("hidden");
-    }, 400);
-
-    } else {
-        adminBox.classList.add("hidden");
-        logoutBtn.classList.add("hidden");
-        pdfBtn.classList.add("hidden");
-
-        // reset visual del login
-        loginBox.classList.remove("hidden");
-        loginBox.classList.remove("fade-out");
-        loginBox.style.opacity ="";
-        loginBox.style.transform = "";
-    }
+  unsubscribeProperties?.();
+  unsubscribeProperties = null;
+  list.replaceChildren();
+  listStatus.textContent = "";
+  loginBox.classList.toggle("hidden", Boolean(user));
+  for (const item of [adminBox, logoutBtn, pdfBtn]) item.classList.toggle("hidden", !user);
+  if (user) {
+    listStatus.textContent = "Cargando propiedades…";
+    unsubscribeProperties = onSnapshot(propertiesQuery, (snapshot) => {
+      if (auth.currentUser?.uid !== user.uid) return;
+      renderProperties(snapshot);
+    }, (error) => {
+      if (auth.currentUser?.uid !== user.uid) return;
+      console.error("No se pudo cargar la administración:", error);
+      listStatus.textContent = "No pudimos cargar las propiedades. Revisa la conexión y los permisos de tu cuenta; después vuelve a iniciar sesión.";
+    });
+  } else {
+    resetPropertyForm();
+    saveMsg.textContent = "";
+    byId("confirmModal").close();
+  }
 });
 
-// Logout
 logoutBtn.addEventListener("click", async () => {
+  const restore = busy(logoutBtn, "Cerrando sesión…");
+  try {
     await signOut(auth);
+  } catch (error) {
+    console.error(error);
+    saveMsg.textContent = "No se pudo cerrar la sesión. Inténtalo de nuevo.";
+  } finally {
+    restore();
+  }
 });
-
 
 addBtn.addEventListener("click", async () => {
-    saveMsg.textContent = "";
-
-    const data = {
-        titulo: pTitulo.value.trim(),
-        zona: pZona.value.trim(),
-        precioTexto: pPrecio.value.trim(),
-        img: pImg.value.trim(),
-        detalles: pDetalles.value.trim(),
-
-        // Esto sera un extra útil desde ya
-        estado: "activa", //activa | vendida | archivada
-        destacada: pDestacada.checked, // Luego esto se va a utilizar
-        createdAt: serverTimestamp()
-    };
-
-    if (!data.titulo || !data.zona || !data.precioTexto) {
-        saveMsg.textContent = "❌ Completa Título, Zona y Precio.";
-        adminBox.classList.add("shake");
-        setTimeout(() => adminBox.classList.remove("shake"), 300);
-        return;
-    }
-
-    if (!pImg.value.trim()) {
-        saveMsg.textContent = "❌ Sube una imagen antes de guardar.";
-        return;
-    }
-
-
-    // UI: loading
-    addBtn.classList.add("loading");
-    const oldText = addBtn.textContent;
-    addBtn.textContent = "Guardando...";
-
-    try {
-        await addDoc(collection(db, "propiedades"), data);
-
-        saveMsg.textContent = "✅ Propiedad guardada"
-        // limpiar inputs
-        pTitulo.value = "";
-        pZona.value = "";
-        pPrecio.value = "";
-        pImg.value = "";
-        pDetalles.value = "";
-        pDestacada.checked = false;
-        pImgFile.value = "";
-        uploadMsg.textContent = "";
-    } catch (error) {
-        console.error(error);
-        saveMsg.textContent = "❌ Error al guardar. Revisa consola.";
-    } finally {
-        addBtn.classList.remove("loading");
-        addBtn.textContent = oldText;
-    }
-});
-
-const propsQ = query(
-    collection(db, "propiedades"),
-    orderBy("createdAt", "desc")
-);
-
-onSnapshot(propsQ, (snap) => {
-    if (!list) return;
-
-    if (snap.empty) {
-    list.innerHTML = `<p class="mini">No hay propiedades aún.</p>`;
+  if (!auth.currentUser || addBtn.disabled) return;
+  saveMsg.textContent = "";
+  const data = {
+    titulo: pTitulo.value.trim(), zona: pZona.value.trim(),
+    precioTexto: pPrecio.value.trim(), img: pImg.value.trim(),
+    detalles: pDetalles.value.trim(), estado: "activa",
+    destacada: pDestacada.checked, createdAt: serverTimestamp()
+  };
+  if (!data.titulo || !data.zona || !data.precioTexto) {
+    saveMsg.textContent = "Completa título, zona y precio.";
     return;
-    }
-
-    list.innerHTML = snap.docs.map((d) => {
-    const p = d.data();
-    const id = d.id;
-
-    const estado = p.estado || "activa";
-    const esActiva = estado === "activa";
-
-return `
-    <div class="map-card ${!esActiva ? "is-archived" : ""}" style="padding:14px;">
-    <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start;">
-        <div>
-        <h3 style="margin:0;">${p.titulo || "Propiedad"}</h3>
-
-        <div style="display:flex; gap:8px; align-items:center; margin-top:6px; flex-wrap:wrap;">
-            <span class="badge ${esActiva ? "badge-ok" : "badge-off"}">
-            ${esActiva ? "Activa" : "Archivada"}
-            </span>
-
-            ${p.destacada ? `<span class="badge badge-star">⭐ Destacada</span>` : ""}
-        </div>
-
-        <p class="mini" style="margin:6px 0 0;">
-            <strong>Zona:</strong> ${p.zona || ""} ·
-            <strong>Precio:</strong> ${p.precioTexto || ""}
-        </p>
-        </div>
-
-        <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
-        <button class="btn ${esActiva ? "" : "success"}" data-toggle="${id}">
-            ${esActiva ? "Archivar" : "Activar"}
-        </button>
-
-        <button class="btn danger" data-del="${id}">
-            Eliminar
-        </button>
-        </div>
-    </div>
-    </div>
-`;
-    }).join("");
-
-  // Archivar/Activar
-    list.querySelectorAll("[data-toggle]").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-        const id = btn.getAttribute("data-toggle");
-
-        btn.classList.add("loading");
-            const old = btn.textContent;
-            btn.textContent = "Procesando...";
-
-        const d = snap.docs.find((x) => x.id === id);
-        const p = d?.data();
-        const estado = p?.estado || "activa";
-        const nuevoEstado = (estado === "activa") ? "archivada" : "activa";
-
-        try {
-        await updateDoc(doc(db, "propiedades", id), { estado: nuevoEstado });
-        } catch (err) {
-        console.error(err);
-        alert("Error cambiando estado. Revisa consola.");
-        }
-    });
-    });
-
-  // Eliminar
-    list.querySelectorAll("[data-del]").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-        const id = btn.getAttribute("data-del");
-        if (!(await confirmUI("¿Eliminar esta propiedad?"))) return;
-        
-        // 🔹 Loading
-        btn.classList.add("loading");
-        const old = btn.textContent;
-        btn.textContent = "Eliminando...";
-
-        try {
-        await deleteDoc(doc(db, "propiedades", id));
-        } catch (err) {
-        console.error(err);
-        alert("Error eliminando. Revisa consola.");
-        } finally {
-            //🔹 Siempre se ejecuta
-            btn.classList.remove("loading");
-            btn.textContent = old;
-        }
-    });
-    });
+  }
+  if (!safeImageUrl(data.img)) {
+    saveMsg.textContent = "Sube una imagen antes de guardar.";
+    return;
+  }
+  const restore = busy(addBtn, "Guardando…");
+  uploadImgBtn.disabled = true;
+  pImgFile.disabled = true;
+  try {
+    await addDoc(collection(db, "propiedades"), data);
+    saveMsg.textContent = "Propiedad guardada.";
+    resetPropertyForm();
+  } catch (error) {
+    console.error(error);
+    saveMsg.textContent = "No se pudo guardar. Revisa la conexión y los permisos de tu cuenta.";
+  } finally {
+    restore();
+    uploadImgBtn.disabled = false;
+    pImgFile.disabled = false;
+  }
 });
 
-function confirmUI(message) {
-    const modal = document.getElementById("confirmModal");
-    const text = document.getElementById("confirmText");
-    const ok = document.getElementById("confirmOk");
-    const cancel = document.getElementById("confirmCancel");
-
-    text.textContent = message;
-    modal.classList.remove("hidden");
-
-    return new Promise((resolve) => {
-    const cleanup = () => {
-        modal.classList.add("hidden");
-        ok.onclick = null;
-        cancel.onclick = null;
-    };
-
-    ok.onclick = () => { cleanup(); resolve(true); };
-    cancel.onclick = () => { cleanup(); resolve(false); };
+function renderProperties(snapshot) {
+  listStatus.textContent = snapshot.empty ? "No hay propiedades todavía." : `${snapshot.size} propiedades en el panel.`;
+  const cards = snapshot.docs.map((entry) => {
+    const property = entry.data();
+    const active = (property.estado || "activa") === "activa";
+    const card = element("article", `map-card admin-property${active ? "" : " is-archived"}`);
+    const info = element("div", "admin-property-info");
+    const badges = element("div", "admin-badges");
+    const label = active ? "Activa" : property.estado === "vendida" ? "Vendida" : "Archivada";
+    badges.append(element("span", `badge ${active ? "badge-ok" : "badge-off"}`, label));
+    if (property.destacada) badges.append(element("span", "badge badge-star", "Destacada"));
+    info.append(element("h3", "", property.titulo || "Propiedad"), badges,
+      element("p", "mini", `Zona: ${property.zona || ""} · Precio: ${property.precioTexto || ""}`));
+    const actions = element("div", "admin-property-actions");
+    const toggle = element("button", "btn btn-outline-primary", active ? "Archivar" : "Activar");
+    toggle.type = "button";
+    toggle.addEventListener("click", async () => {
+      if (!auth.currentUser) return;
+      const restore = busy(toggle, "Procesando…");
+      try {
+        await updateDoc(doc(db, "propiedades", entry.id), { estado: active ? "archivada" : "activa" });
+      } catch (error) {
+        console.error(error);
+        listStatus.textContent = "No se pudo cambiar el estado. Inténtalo de nuevo.";
+      } finally {
+        restore();
+      }
     });
+    const remove = element("button", "btn danger", "Eliminar");
+    remove.type = "button";
+    remove.addEventListener("click", async () => {
+      const userId = auth.currentUser?.uid;
+      if (!userId || !(await confirmDelete(property.titulo || "esta propiedad"))) return;
+      if (auth.currentUser?.uid !== userId) return;
+      const restore = busy(remove, "Eliminando…");
+      try {
+        await deleteDoc(doc(db, "propiedades", entry.id));
+      } catch (error) {
+        console.error(error);
+        listStatus.textContent = "No se pudo eliminar. Inténtalo de nuevo.";
+      } finally {
+        restore();
+      }
+    });
+    actions.append(toggle, remove);
+    card.append(info, actions);
+    return card;
+  });
+  list.replaceChildren(...cards);
 }
 
-function formatDateYYYYMMDD(d = new Date()) {
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
+function confirmDelete(title) {
+  const dialog = byId("confirmModal");
+  if (dialog.open) return Promise.resolve(false);
+  byId("confirmText").textContent = `¿Eliminar «${title}»? Esta acción no se puede deshacer.`;
+  dialog.returnValue = "";
+  return new Promise((resolve) => {
+    dialog.addEventListener("close", () => resolve(dialog.returnValue === "delete"), { once: true });
+    dialog.showModal();
+  });
 }
 
-pdfBtn?.addEventListener("click", async () => {
-    try {
-    pdfBtn.classList.add("loading");
-    const old = pdfBtn.textContent;
-    pdfBtn.textContent = "Generando PDF...";
-
-    // ✅ Cambiá esto si querés incluir archivadas también:
-    const q = query(
-    collection(db, "propiedades"),
-    orderBy("createdAt", "desc")
-);
-
-    const snap = await getDocs(q);
-
-    const rows = snap.docs.map((d, i) => {
-        const p = d.data();
-        return [
-        i + 1,
-        p.titulo || "",
-        p.zona || "",
-        p.precioTexto || "",
-        p.destacada ? "Sí" : "No",
-        p.estado || "activa"
-        ];
+pdfBtn.addEventListener("click", async () => {
+  if (!auth.currentUser) return;
+  const restore = busy(pdfBtn, "Generando PDF…");
+  try {
+    const snapshot = await getDocs(propertiesQuery);
+    const rows = snapshot.docs.map((entry, index) => {
+      const property = entry.data();
+      return [index + 1, String(property.titulo || ""), String(property.zona || ""),
+        String(property.precioTexto || ""), property.destacada ? "Sí" : "No", String(property.estado || "activa")];
     });
-
-    const hoy = formatDateYYYYMMDD();
-    const docDefinition = {
-        pageSize: "A4",
-        pageMargins: [30, 40, 30, 40],
-        content: [
+    const now = new Date();
+    const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    window.pdfMake.createPdf({
+      pageSize: "A4", pageMargins: [30, 40, 30, 40],
+      content: [
         { text: "CONSTRUCTORA CAMPOAMOR", style: "title" },
-        { text: `Listado de propiedades (${hoy})`, style: "subtitle" },
+        { text: `Listado de propiedades (${date})`, margin: [0, 0, 0, 12] },
         { text: `Total: ${rows.length}`, margin: [0, 0, 0, 10] },
-
-        {
-            table: {
-            headerRows: 1,
-            widths: [22, "*", 80, 85, 65, 60],
-            body: [
-                ["#", "Título", "Zona", "Precio", "Destacada", "Estado"],
-                ...rows
-            ]
-            },
-            layout: "lightHorizontalLines"
-        }
-        ],
-        styles: {
-        title: { fontSize: 16, bold: true, margin: [0, 0, 0, 4] },
-        subtitle: { fontSize: 12, color: "#444", margin: [0, 0, 0, 12] }
-        }
-    };
-
-    // pdfMake es global por los <script> del HTML
-    window.pdfMake.createPdf(docDefinition).download(`propiedades_${hoy}.pdf`);
-
-    pdfBtn.textContent = old;
-    pdfBtn.classList.remove("loading");
-    } catch (err) {
-    console.error(err);
-    alert("No se pudo generar el PDF. Revisa la consola.");
-    pdfBtn.classList.remove("loading");
-    pdfBtn.textContent = "Descargar PDF";
-    }
+        { table: { headerRows: 1, widths: [22, "*", 80, 85, 65, 60],
+          body: [["#", "Título", "Zona", "Precio", "Destacada", "Estado"], ...rows] }, layout: "lightHorizontalLines" }
+      ],
+      styles: { title: { fontSize: 16, bold: true, margin: [0, 0, 0, 4] } }
+    }).download(`propiedades_${date}.pdf`);
+  } catch (error) {
+    console.error(error);
+    listStatus.textContent = "No se pudo generar el PDF. Revisa la conexión e inténtalo de nuevo.";
+  } finally {
+    restore();
+  }
 });

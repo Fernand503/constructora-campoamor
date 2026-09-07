@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | CONSTRUCTORA CAMPOAMOR</title>
-    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="CSS/style.css" />
-    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/CSS/style.css" />
     <style>
         .admin-wrap { max-width: 900px; margin: 0 auto; padding: 22px; }
         .hidden { display: none; }
@@ -18,7 +16,6 @@
     }
     textarea { min-height: 90px; resize: vertical; }
     .top-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
-    .danger { background: #ef4444; }
     .list { display: grid; gap: 12px; margin-top: 12px; }
     .mini { font-size: 13px; color: #6b7280;}
     .badge{
@@ -44,20 +41,6 @@
     opacity:0.7;
     pointer-events:none;
 }
-.modal{
-    position:fixed; inset:0;
-    background:rgba(0,0,0,.45);
-    display:flex; align-items:center; justify-content:center;
-    z-index:9999;
-}
-.modal.hidden{ display:none; }
-.modal-box{
-    width:min(420px, 92vw);
-    background:#fff;
-    border-radius:16px;
-    padding:18px;
-    box-shadow:0 10px 30px rgba(0,0,0,.2);
-}
 .modal-actions{
     margin-top:14px;
     display:flex;
@@ -65,27 +48,37 @@
     justify-content:flex-end;
 }
     </style>
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="manifest" href="/site.webmanifest.json">
+    <meta name="theme-color" content="#163c63">
+    <link rel="canonical" href="https://constructoracampoamor.com/admin.html">
 </head>
 <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
     <header class="header">
-    <div class="logo">CONSTRUCTORA CAMPOAMOR</div>
-    <nav class="nav">
-        <a href="index.html">Inicio</a>
-        <a href="/propiedades/">Propiedades</a>
-        <a href="/ubicaciones/">Ubicaciones</a>
-        <a href="/nosotros/">Nosotros</a>
-        <a href="/contacto/">Contacto</a>
-        <a href="/terminos/">Términos</a>
-    </nav>
+        <a class="logo" href="/" aria-label="Geometría y Construcción — Inicio">
+            <strong>GEOMETRÍA Y CONSTRUCCIÓN</strong>
+            <span>S.A. DE C.V.</span>
+        </a>
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú" aria-controls="mainNav" aria-expanded="false">☰</button>
+        <nav class="site-nav" id="mainNav" aria-label="Navegación principal">
+            <a href="/">Inicio</a>
+            <a href="/propiedades/">Propiedades</a>
+            <a href="/ubicaciones/">Ubicaciones</a>
+            <a href="/nosotros/">Nosotros</a>
+            <a href="/contacto/">Contacto</a>
+            <a href="/terminos/">Términos</a>
+            <a href="/admin.html" id="navAdmin" class="hidden" aria-current="page">Admin</a>
+        </nav>
     </header>
 
-    <main class="admin-wrap">
+    <main id="contenido" class="admin-wrap">
 
     <!-- HEADER ADMIN -->
     <div class="top-actions">
     <div>
         <h1>Panel Admin</h1>
-        <p class="mini">Solo para administrar propiedades (Agregar / Eliminar).</p>
+        <p class="mini">Publica, destaca y administra las propiedades del catálogo.</p>
     </div>
     <button id="logoutBtn" class="btn danger hidden">Cerrar sesión</button>
     <button id="pdfBtn" class="btn hidden" type="button">Descargar PDF</button>
@@ -94,18 +87,18 @@
     <!-- LOGIN -->
     <section id="loginBox" class="map-card">
     <h2>Iniciar sesión</h2>
-    <p class="mini">Su correo de Administrador (Mamá)</p>
+    <p class="mini">Ingresa con tu cuenta de administración.</p>
 
     <form id="loginForm">
         <div class="row" style="margin-top: 12px;">
         <div class="field">
-            <label>Correo</label>
-            <input id="email" type="email" placeholder="correo@gmail.com" />
+            <label for="email">Correo</label>
+            <input id="email" type="email" autocomplete="username" required placeholder="correo@gmail.com" />
         </div>
 
         <div class="field">
-            <label>Contraseña</label>
-            <input id="password" type="password" placeholder="********" />
+            <label for="password">Contraseña</label>
+            <input id="password" type="password" autocomplete="current-password" required placeholder="********" />
         </div>
     </div>
 
@@ -113,7 +106,7 @@
         Entrar
     </button>
 
-        <p id="loginMsg" class="mini" style="margin-top: 10px;"></p>
+        <p id="loginMsg" role="status" class="mini" style="margin-top: 10px;"></p>
     </form>
 </section>
 
@@ -126,33 +119,34 @@
 
         <div class="row" style="margin-top: 12px;">
         <div class="field">
-            <label>Título</label>
+            <label for="pTitulo">Título</label>
             <input id="pTitulo" placeholder="Casa en Mejicanos" />
         </div>
 
         <div class="field">
-            <label>Zona</label>
+            <label for="pZona">Zona</label>
             <input id="pZona" placeholder="Mejicanos" />
         </div>
     </div>
 
         <div class="row" style="margin-top: 12px;">
         <div class="field">
-            <label>Precio (texto)</label>
+            <label for="pPrecio">Precio (texto)</label>
             <input id="pPrecio" placeholder="$175,000 USD" />
         </div>
 
         <div class="field">
-    <label>Imagen (subir desde el panel)</label>
-    <input type="file" id="pImgFile" accept="image/*">
+    <label for="pImgFile">Imagen (subir desde el panel)</label>
+    <input type="file" id="pImgFile" accept="image/jpeg,image/png,image/webp" aria-describedby="imageHelp">
+    <p id="imageHelp" class="mini">JPG, PNG o WebP. Máximo 10 MB por imagen.</p>
     <button type="button" id="uploadImgBtn" class="btn success">
         Subir imagen
     </button>
-    <p id="uploadMsg" class="mini"></p>
+    <p id="uploadMsg" role="status" class="mini"></p>
 
     <!-- Aquí se guardará la URL final automáticamente -->
     <input id="pImg" type="hidden" />
-    <p id="uploadMsg" class="mini" style="margin-top: 8px;"></p>
+
   </div>
 </div>
         <div class="field" style="margin-top: 12px;">
@@ -163,7 +157,7 @@
         </div>
 
         <div class="field" style="margin-top: 12px;">
-        <label>Detalles</label>
+        <label for="pDetalles">Detalles</label>
         <textarea id="pDetalles" placeholder="3 habitaciones • 2 baños • Cochera"></textarea>
         </div>
 
@@ -171,36 +165,38 @@
         Guardar propiedad
         </button>
 
-        <p id="saveMsg" class="mini" style="margin-top: 10px;"></p>
+        <p id="saveMsg" role="status" class="mini" style="margin-top: 10px;"></p>
     </section>
 
     <!-- LISTADO -->
     <section class="map-card">
         <h2>Propiedades actuales</h2>
+        <p id="listStatus" class="mini" role="status"></p>
         <div id="list" class="list"></div>
     </section>
 
     </section>
 </main>
-<div id="confirmModal" class="modal hidden">
-    <div class="modal-box">
-    <h3>Confirmación</h3>
-    <p id="confirmText" class="mini">¿Seguro?</p>
-    <div class="modal-actions">
-        <button id="confirmCancel" class="btn">Cancelar</button>
-        <button id="confirmOk" class="btn danger">Eliminar</button>
-    </div>
-    </div>
-</div>
+<dialog id="confirmModal" class="confirm-dialog" aria-labelledby="confirmTitle" aria-describedby="confirmText">
+    <h2 id="confirmTitle">Eliminar propiedad</h2>
+    <p id="confirmText">¿Eliminar esta propiedad?</p>
+    <form method="dialog" class="modal-actions">
+        <button class="btn btn-outline-primary" value="cancel" autofocus>Cancelar</button>
+        <button class="btn danger" value="delete">Eliminar</button>
+    </form>
+</dialog>
 
     <footer class="footer">
-        <p>© 2025 CONSTRUCTORA CAMPOAMOR</p>
-        <p>WhatsApp: +503 7468 1990 - San Salvador</p>
+        <p>© 2026 GEOMETRÍA Y CONSTRUCCIÓN</p>
+        <p><a href="tel:+50374681990">+503 7468 1990</a> · San Salvador</p>
+        <a href="/terminos/">Términos y privacidad</a>
     </footer>
 
     <!-- Firebase + lógica admin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.min.js"></script>
-    <script type="module" src="JS/admin.js"></script>
+    <script type="module" src="/JS/admin.js"></script>
+    <script src="/JS/app.js"></script>
+    <script type="module" src="/JS/nav-auth.js"></script>
 </body>
 </html>

@@ -8,6 +8,47 @@ Sitio web inmobiliario para publicar, administrar y consultar propiedades en El 
 - Si agregas nuevos cambios, añade una nueva fecha arriba con el resumen.
 - Se omite intencionalmente la carpeta `/img`.
 
+## 2026-09-07 — Navegación, catálogo y presentación
+
+### Cambios
+
+- Menú móvil común en las ocho páginas principales, con estado accesible, cierre con Escape y enlaces desde cualquier carpeta.
+- Cabecera clara, colores y botones consistentes, tarjetas con título, zona, precio y contacto. Se conserva HTML/CSS/JavaScript, Firebase y GitHub Pages.
+- Las rutas públicas canónicas son `/propiedades/`, `/ubicaciones/`, `/nosotros/`, `/contacto/` y `/terminos/`. Los archivos `.html` antiguos redirigen a estas páginas para evitar mantener dos versiones de cada sección.
+- El catálogo consulta solo `estado == "activa"` y muestra 12 resultados por tanda, con botón para cargar más y para reintentar si falla la conexión. El orden público ahora es estable por ID de Firestore, en lugar de fecha; así no se exige desplegar un índice compuesto nuevo. Se lee un resultado adicional para saber si hay otra tanda. Inicio muestra como máximo seis destacadas activas.
+- `JS/property-card.js` comparte las tarjetas públicas y los enlaces de WhatsApp, y trata los valores de Firestore como texto. Las URL de imágenes se validan y los errores muestran un aviso sin recargas infinitas.
+- Galería de Buenaventura con cuatro indicadores, imágenes completas (`object-fit: contain`), contador y navegación manual circular. Se quitó el avance automático para permitir observar cada imagen con calma.
+- Brochure cargado al abrir el modal. Copia para pantalla en `PDF/buenaventura-web.pdf`: **637.001 bytes**, frente a **10.859.761 bytes** del original (**94,1 % menos**). Conserva las dos páginas, sus dimensiones y todo el texto extraíble; las imágenes se redujeron a 160 ppp. El original sigue disponible para descargar e imprimir.
+- Panel: suscripción a propiedades después del inicio de sesión, cancelación al salir, listado sin interpolar HTML, botones deshabilitados mientras trabajan y recuperación después de un error. El diálogo de eliminación admite teclado. La carga de imágenes acepta JPG, PNG y WebP hasta 10 MB, con validación del lado del cliente.
+- Rutas de favicon y manifest corregidas; imágenes con dimensiones y carga diferida bajo el contenido inicial; nombres accesibles para mapas, controles y formularios.
+
+### Comprobaciones reproducibles
+
+Desde la raíz del repositorio, con Python 3 y Node.js 24:
+
+```bash
+python tests/check_site.py
+node --experimental-vm-modules --test tests/behavior.test.mjs
+```
+
+La primera comprobación revisa 13 documentos HTML, rutas y recursos locales, anclas, IDs duplicados, etiquetas, referencias accesibles, importaciones y sintaxis JavaScript. La segunda ejecuta cinco pruebas con datos y servicios simulados: tarjetas y URL, paginación y reintentos, catálogo vacío, menú móvil y ciclo de sesión del panel. No se instalan dependencias de pruebas.
+
+También se consultaron, sin autenticación ni escrituras, los filtros públicos de activas y destacadas en Firestore: ambos respondieron HTTP 200 y no devolvieron propiedades al momento de esta revisión.
+
+El PDF optimizado se renderizó y se inspeccionaron sus dos páginas; el texto extraído y las dimensiones coinciden con el original. Esta revisión no incluye pruebas visuales del sitio en navegador ni operaciones reales de alta, archivo, eliminación, login o subida de imágenes.
+
+### Revisión antes de publicar
+
+- Revisar el aspecto en móvil y escritorio, la cuarta imagen y el regreso a la primera, el brochure y los enlaces de contacto.
+- Probar con una cuenta autorizada el flujo de administración y la exportación del listado.
+- Comprobar en Firebase las reglas de Firestore: ocultar el enlace Admin y revisar la sesión en JavaScript solo controla la interfaz. Las reglas reales no están incluidas en este repositorio y no se han modificado. La validación de carga también debe reforzarse en el preset de Cloudinary.
+
+### Dónde editar
+
+- `CSS/style.css`: diseño compartido; `Buenaventura/style.css`: presentación del proyecto.
+- `JS/app.js`: menú; `JS/property-card.js`: tarjeta y WhatsApp; `JS/propiedades.js`: catálogo; `JS/home.js`: destacadas; `JS/admin.js`: panel; `JS/buenaventura.js`: brochure y contador de galería.
+- Editar las páginas de cada carpeta; conservar los `.html` de la raíz como redirecciones. La cabecera y el pie siguen siendo HTML estático compartido por convención: aplicar cambios de navegación en las ocho páginas principales.
+
 ## 2026-02-08 — Estado actual documentado
 
 ### Resumen
@@ -95,5 +136,5 @@ Sitio web inmobiliario para publicar, administrar y consultar propiedades en El 
 ## Próximos cambios sugeridos
 
 - Documentar variables de entorno y credenciales públicas/privadas.
-- Agregar instrucciones de despliegue (Firebase Hosting / Vercel / Netlify).
-- Incluir validaciones de formularios más estrictas y manejo de errores centralizado.
+- Documentar la configuración de publicación actual de GitHub Pages.
+- Versionar y probar las reglas de Firestore y las restricciones del preset de Cloudinary.

@@ -5,12 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nosotros | CAMPOAMOR S.A</title>
     <link rel="stylesheet" href="/CSS/style.css" />
-    <link rel="icon" href="/favicon.ico">
-    <link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="manifest" href="/site.webmanifest">
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-FVEXNTSWBE"></script>
 <script>
@@ -20,32 +14,40 @@
 
     gtag('config', 'G-FVEXNTSWBE');
 </script>
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="manifest" href="/site.webmanifest.json">
+    <meta name="theme-color" content="#163c63">
+    <link rel="canonical" href="https://constructoracampoamor.com/nosotros/">
 </head>
 <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
     <header class="header">
-        <div class="logo">GEOMETRIA Y CONSTRUCCION S.A de CV</div>
-
-        <nav class="nav" id="mainNav">
-            <a href="/admin.html" id="navAdmin" class="hidden">Admin</a>
+        <a class="logo" href="/" aria-label="Geometría y Construcción — Inicio">
+            <strong>GEOMETRÍA Y CONSTRUCCIÓN</strong>
+            <span>S.A. DE C.V.</span>
+        </a>
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú" aria-controls="mainNav" aria-expanded="false">☰</button>
+        <nav class="site-nav" id="mainNav" aria-label="Navegación principal">
             <a href="/">Inicio</a>
             <a href="/propiedades/">Propiedades</a>
             <a href="/ubicaciones/">Ubicaciones</a>
-            <a href="/nosotros/">Nosotros</a>
+            <a href="/nosotros/" aria-current="page">Nosotros</a>
             <a href="/contacto/">Contacto</a>
             <a href="/terminos/">Términos</a>
+            <a href="/admin.html" id="navAdmin" class="hidden">Admin</a>
         </nav>
     </header>
 
-    <main class="container">
+    <main id="contenido" class="container">
         <h1>Sobre Nosotros</h1>
-        <p>Somos una constructora enfocada en brindar asesoria confiable y proyectos de calidad.</p>
+        <p>Somos una constructora enfocada en brindar asesoría confiable y proyectos de calidad.</p>
 
         <section class="about-grid">
             <div class="about-card">
                 <h2>Misión</h2>
-                <p>Ayudar a nuestros clientes en encontrar una propiedad con transpariencia y acompañamiento.</p>
+                <p>Ayudar a nuestros clientes a encontrar una propiedad con transparencia y acompañamiento.</p>
                 </div>
-                
+
                 <div class="about-card">
                     <h2>Visión</h2>
                     <p>Ser una opción líder en proyectos habitacionales por calidad y atención.</p>
@@ -53,24 +55,18 @@
 
                 <div class="about-card">
                     <h2>Valores</h2>
-                    <p>Confianza * Responsabilidad * Transpariencia * Servicio</p>
+                    <p>Confianza · Responsabilidad · Transparencia · Servicio</p>
                 </div>
         </section>
     </main>
 
         <footer class="footer">
-        <p>© 2026 GEOMETRIA Y CONSTRUCCION</p>
-        <p>WhatsApp: +503 7468 1990 - San Salvador</p>
+        <p>© 2026 GEOMETRÍA Y CONSTRUCCIÓN</p>
+        <p><a href="tel:+50374681990">+503 7468 1990</a> · San Salvador</p>
+        <a href="/terminos/">Términos y privacidad</a>
     </footer>
     <script src="/JS/app.js"></script>
-    <script>
-    const menuBtn = document.getElementById("menuBtn");
-    const navMenu = document.getElementById("mainNav");
 
-    menuBtn.addEventListener("click", () => {
-    navMenu.classList.toggle("open");
-    });
-</script>
     <script type="module" src="/JS/nav-auth.js"></script>
 </body>
 </html>

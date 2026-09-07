@@ -4,28 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Residencial Buenaventura</title>
-    <link rel="stylesheet" href="/Buenaventura/style.css">
-    <link rel="stylesheet" href="/CSS/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/CSS/style.css">
+    <link rel="stylesheet" href="/Buenaventura/style.css">
+    <meta name="description" content="Conoce Residencial Buenaventura: viviendas de dos niveles, galería, brochure y ubicación en Ilopango.">
 
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="manifest" href="/site.webmanifest.json">
+    <meta name="theme-color" content="#163c63">
+    <link rel="canonical" href="https://constructoracampoamor.com/Buenaventura/buenaventura.html">
 </head>
 <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
     <header class="header">
-        <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button>
-        <div class="logo">GEOMETRIA Y CONSTRUCCION S.A de CV</div>
-
-        <nav class="nav" id="mainNav">
-            <a href="admin.html" id="navAdmin" class="hidden">Admin</a>
-            <a href="index.html">Inicio</a>
-            <a href="/propiedades/index.html">Propiedades</a>
-            <a href="/ubicaciones/index.html">Ubicaciones</a>
-            <a href="/nosotros/index.html">Nosotros</a>
-            <a href="/contacto/index.html">Contacto</a>
-            <a href="/terminos/index.html">Términos</a>
+        <a class="logo" href="/" aria-label="Geometría y Construcción — Inicio">
+            <strong>GEOMETRÍA Y CONSTRUCCIÓN</strong>
+            <span>S.A. DE C.V.</span>
+        </a>
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú" aria-controls="mainNav" aria-expanded="false">☰</button>
+        <nav class="site-nav" id="mainNav" aria-label="Navegación principal">
+            <a href="/">Inicio</a>
+            <a href="/propiedades/">Propiedades</a>
+            <a href="/ubicaciones/">Ubicaciones</a>
+            <a href="/nosotros/">Nosotros</a>
+            <a href="/contacto/">Contacto</a>
+            <a href="/terminos/">Términos</a>
+            <a href="/admin.html" id="navAdmin" class="hidden">Admin</a>
         </nav>
     </header>
 
-    <main class="bv-hero">
+    <main id="contenido">
+    <section class="bv-hero">
         <div class="container py-5">
             <div class="row align-items-center g-4">
 
@@ -64,13 +73,13 @@
                   <div class="col-12 col-lg-6">
                     <div class="bv-media">
                         <img src="/img/hero3.jpeg" alt="Residencial Buenaventura"
-                        class="img-fluid"/>
+                        class="img-fluid" width="1024" height="1024" decoding="async" fetchpriority="high">
                     </div>
                   </div>
-                
+
             </div>
         </div>
-    </main>
+    </section>
 
     <!-- Ancla para el botón -->
      <section id="modelos" class="container py-5">
@@ -84,31 +93,35 @@
             <!-- Modelo A -->
              <div class="col-12 col-md-6 col-lg-4">
                 <div class="model-card">
-                    <h3>Modelo </h3>
+                    <h3>Vivienda de dos niveles</h3>
                     <p>4 Habitaciones · 3 Baños completos · 1 Social</p>
-                    <a class="btn btn-outline-primary btn-sm"
+                    <button type="button" class="btn btn-outline-primary btn-sm"
                         data-bs-toggle="modal"
                         data-bs-target="#modalPlanoA">
-                        Ver plano
-                    </a>
+                        Ver brochure y planos
+                    </button>
                 </div>
              </div>
 
         </div>
      </section>
 
-     <div class="modal fade" id="modalPlanoA" tabindex="-1">
+     <div class="modal fade" id="modalPlanoA" tabindex="-1" aria-labelledby="brochureTitle">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Modelo - Plano</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h2 class="modal-title fs-5" id="brochureTitle">Buenaventura · Brochure y planos</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
                 <div class="modal-body">
-                    <iframe src="/PDF/CONDOMINIO RESIDENCIAL.pdf" 
-                    style="width: 100%; height: 80vh; border: none;"></iframe>
+                    <div class="brochure-actions">
+                        <a class="btn btn-outline-primary btn-sm" href="/PDF/buenaventura-web.pdf" target="_blank" rel="noopener noreferrer">Abrir en otra pestaña</a>
+                        <a class="btn btn-outline-primary btn-sm" href="/PDF/CONDOMINIO%20RESIDENCIAL.pdf" download>Descargar original</a>
+                    </div>
+                    <p class="mini">El documento puede tardar unos segundos en mostrarse. Si el visor queda en blanco, ábrelo en otra pestaña.</p>
+                    <iframe id="brochureFrame" class="brochure-frame" data-src="/PDF/buenaventura-web.pdf" title="Brochure y planos de Residencial Buenaventura"></iframe>
                 </div>
 
             </div>
@@ -116,28 +129,28 @@
      </div>
 
     <section class="container py-5" id="galeria">
-        <h2 class="section-title">Galeria</h2>
+        <h2 class="section-title">Galería</h2>
 
-        <div id="bvCarousel" class="carousel slide bv-carousel mt-3" data-bs-ride="carousel">
+        <div id="bvCarousel" class="carousel slide bv-carousel mt-3" data-bs-interval="false" data-bs-wrap="true" role="region" aria-roledescription="carrusel" aria-label="Galería de Residencial Buenaventura">
             <div class="carousel-indicators">
-                <button type="button" data-bs-target="#bvCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#bvCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#bvCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                <button type="button" data-bs-target="#bvCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                <button type="button" data-bs-target="#bvCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Ver imagen 1"></button>
+                <button type="button" data-bs-target="#bvCarousel" data-bs-slide-to="1" aria-label="Ver imagen 2"></button>
+                <button type="button" data-bs-target="#bvCarousel" data-bs-slide-to="2" aria-label="Ver imagen 3"></button>
+                <button type="button" data-bs-target="#bvCarousel" data-bs-slide-to="3" aria-label="Ver imagen 4"></button>
             </div>
 
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="/img/Modelo3D1.jpeg" class="d-block w-100" alt="Plano 1 Buenaventura">
+                    <img src="/img/Modelo3D1.jpeg" class="d-block w-100" alt="Vista interior 1 de Buenaventura" width="720" height="1210" decoding="async" loading="lazy">
                 </div>
                 <div class="carousel-item">
-                    <img src="/img/Modelo3D2.jpeg" class="d-block w-100" alt="Plano 3 Buenaventura">
+                    <img src="/img/Modelo3D2.jpeg" class="d-block w-100" alt="Vista interior 2 de Buenaventura" width="626" height="1280" decoding="async" loading="lazy">
                 </div>
                 <div class="carousel-item">
-                    <img src="/img/Modelo3D3.jpeg" class="d-block w-100" alt="Plano 4 Buenaventura">
+                    <img src="/img/Modelo3D3.jpeg" class="d-block w-100" alt="Vista interior 3 de Buenaventura" width="679" height="1280" decoding="async" loading="lazy">
                 </div>
                 <div class="carousel-item">
-                    <img src="/img/FACHADA.jpeg" class="d-block w-100" alt="Plano 4 Buenaventura">
+                    <img src="/img/FACHADA.jpeg" class="d-block w-100" alt="Fachada de las viviendas de Buenaventura" width="1280" height="697" decoding="async" loading="lazy">
                 </div>
             </div>
 
@@ -148,6 +161,7 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
             </button>
         </div>
+        <p id="galleryStatus" class="gallery-status" role="status">Imagen 1 de 4</p>
     </section>
 
     <section class="container py-5">
@@ -156,11 +170,20 @@
     Es una zona estratégica, con fácil acceso a vías principales, transporte, comercios y servicios, lo que la hace ideal tanto para vivir como para inversión.
     </p>
 
-    <div class="ratio ratio-16x9 m-3 rounded-4 overflow-hidden">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3876.3781045841047!2d-89.126431!3d13.695535000000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTPCsDQxJzQzLjkiTiA4OcKwMDcnMzUuMiJX!5e0!3m2!1ses-419!2ssv!4v1770163521425!5m2!1ses-419!2ssv" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+    <div class="ratio ratio-16x9 mt-3 rounded-4 overflow-hidden">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3876.3781045841047!2d-89.126431!3d13.695535000000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTPCsDQxJzQzLjkiTiA4OcKwMDcnMzUuMiJX!5e0!3m2!1ses-419!2ssv!4v1770163521425!5m2!1ses-419!2ssv" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ubicación del proyecto en Google Maps">
         </iframe>
     </div>
     </section>
+    </main>
+    <footer class="footer">
+        <p>© 2026 GEOMETRÍA Y CONSTRUCCIÓN</p>
+        <p><a href="tel:+50374681990">+503 7468 1990</a> · San Salvador</p>
+        <a href="/terminos/">Términos y privacidad</a>
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/JS/app.js"></script>
+    <script type="module" src="/JS/nav-auth.js"></script>
+    <script src="/JS/buenaventura.js"></script>
 </body>
 </html>
